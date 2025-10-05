@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tutor [V2]: Behaviour of Gases</title>
+    <title>AI Tutor [V3]: Behaviour of Gases</title>
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
@@ -27,10 +27,7 @@
             margin: 0;
             padding: 20px;
         }
-        .container {
-            max-width: 960px;
-            margin: auto;
-        }
+        .container { max-width: 960px; margin: auto; }
         header { text-align: center; margin-bottom: 2rem; }
         h1 { color: var(--primary-color); }
         .tabs-nav {
@@ -40,52 +37,30 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.07);
             padding: 8px;
             margin-bottom: 1.5rem;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
         }
         .nav-btn {
-            flex: 1;
-            padding: 12px 15px;
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #555;
-            border-radius: 6px;
-            transition: background-color 0.3s, color 0.3s;
-            text-align: center;
+            flex: 1; padding: 12px 15px; border: none; background-color: transparent; cursor: pointer;
+            font-size: 1rem; font-weight: 500; color: #555; border-radius: 6px;
+            transition: background-color 0.3s, color 0.3s; text-align: center;
         }
         .nav-btn:hover { background-color: #e9ecef; }
-        .nav-btn.active {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 2px 4px rgba(0, 86, 179, 0.3);
-        }
+        .nav-btn.active { background-color: var(--primary-color); color: white; box-shadow: 0 2px 4px rgba(0, 86, 179, 0.3); }
         .content-section { display: none; }
-        .content-section.active {
-            display: block;
-            animation: fadeIn 0.5s ease-in-out;
-        }
+        .content-section.active { display: block; animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card {
-            background: var(--card-bg);
-            padding: 1.5rem 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-            margin-bottom: 1.5rem;
-        }
+        .card { background: var(--card-bg); padding: 1.5rem 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); margin-bottom: 1.5rem; }
         h2, h3 { color: var(--primary-color); border-bottom: 2px solid #eef; padding-bottom: 8px; margin-top: 0; }
         ul { padding-left: 20px; }
-        .formula-box {
-            background-color: #e9f5ff;
-            border-left: 4px solid var(--secondary-color);
-            padding: 15px; margin: 15px 0; border-radius: 4px; font-size: 1.1em;
-        }
+        .formula-box { background-color: #e9f5ff; border-left: 4px solid var(--secondary-color); padding: 15px; margin: 15px 0; border-radius: 4px; font-size: 1.1em; overflow-x: auto; }
         /* AI Tutor Section Styles */
         #ai-tutor-content textarea, #ai-tutor-content select, #ai-tutor-content button {
             width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 1rem;
         }
         #ai-tutor-content button { background-color: var(--secondary-color); color: white; border: none; cursor: pointer; font-weight: bold; }
-        #ai-response-area { margin-top: 1rem; padding: 1rem; background-color: #f8f9fa; border-radius: 6px; min-height: 50px; border: 1px solid var(--border-color); white-space: pre-wrap; }
+        #ai-response-area { margin-top: 1rem; padding: 1rem; background-color: #f8f9fa; border-radius: 6px; min-height: 50px; border: 1px solid var(--border-color); white-space: pre-wrap; line-height: 1.6; }
         .loader { border: 4px solid #f3f3f3; border-radius: 50%; border-top: 4px solid var(--secondary-color); width: 25px; height: 25px; animation: spin 1s linear infinite; display: none; margin: 15px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -106,25 +81,14 @@
         </nav>
 
         <main>
-            <section id="concepts" class="content-section active">
-                </section>
-
-            <section id="formulas" class="content-section">
-                <div class="card">
-                    <h2>Formula Sheet</h2>
-                    <p>A quick reference for all key equations in this chapter.</p>
-                    <div id="formulas-content"></div>
-                </div>
-            </section>
-
-            <section id="advanced" class="content-section">
-                 </section>
-
+            <section id="concepts" class="content-section active"></section>
+            <section id="formulas" class="content-section"></section>
+            <section id="advanced" class="content-section"></section>
             <section id="ai-tutor" class="content-section">
                 <div id="ai-tutor-content" class="card">
                     <h2>Ask the AI Tutor</h2>
                     <p>Have a question? Select an AI model and ask anything about the behaviour of gases.</p>
-                    <textarea id="user-question" rows="4" placeholder="e.g., What is the physical significance of the van der Waals constant 'a'?"></textarea>
+                    <textarea id="user-question" rows="4" placeholder="e.g., Explain the difference between diffusion and effusion."></textarea>
                     <select id="model-selector">
                         <option value="gemini">Gemini (Google)</option>
                         <option value="gpt">GPT (OpenAI)</option>
@@ -146,60 +110,125 @@
         // JAVASCRIPT LOGIC AND EXTRACTED DATA
         // ===================================================================================
 
-        // --- Placeholder for OCR/Text Data ---
         const extractedTextbookContent = {
             conceptsAndLaws: [
-                {
-                    title: "Properties of Gases",
-                    content: `
-                        <ul>
-                            <li>Gases have neither a definite shape nor volume, taking the shape and volume of their container.</li>
-                            <li>They are highly compressible due to large intermolecular spaces.</li>
-                            <li>They exhibit high rates of diffusion (intermixing) and effusion (escaping through a small hole).</li>
-                            <li>Key measurable properties are <strong>Mass (m)</strong>, <strong>Volume (V)</strong>, <strong>Pressure (P)</strong>, and <strong>Temperature (T)</strong>.</li>
-                        </ul>
-                    `
-                },
-                {
-                    title: "Boyle's Law",
-                    content: "At constant temperature, the volume of a given mass of gas is <strong>inversely proportional</strong> to its pressure. The P-V graph is a hyperbola called an isotherm.",
-                    formula: "P_1V_1 = P_2V_2"
-                },
-                {
-                    title: "Charles' Law",
-                    content: "At constant pressure, the volume of a given mass of gas is <strong>directly proportional</strong> to its absolute temperature (in Kelvin).",
-                    formula: "\\frac{V_1}{T_1} = \\frac{V_2}{T_2}"
-                },
-                {
-                    title: "Gay-Lussac's Law",
-                    content: "At constant volume, the pressure of a given mass of gas is <strong>directly proportional</strong> to its absolute temperature. The P-T graph is an isochore.",
-                    formula: "\\frac{P_1}{T_1} = \\frac{P_2}{T_2}"
-                },
-                {
-                    title: "Avogadro's Law",
-                    content: "At constant temperature and pressure, equal volumes of all gases contain an <strong>equal number of moles</strong> (or molecules).",
-                    formula: "\\frac{V_1}{n_1} = \\frac{V_2}{n_2}"
-                },
-                {
-                    title: "Ideal Gas Equation",
-                    content: "This equation combines the gas laws to relate all four variables for a hypothetical 'ideal gas'. 'R' is the universal gas constant.",
-                    formula: "PV = nRT"
-                },
-                 {
-                    title: "Graham's Law of Diffusion",
-                    content: "At constant temperature and pressure, the rate of diffusion (r) of a gas is <strong>inversely proportional</strong> to the square root of its molar mass (M) or density (d).",
-                    formula: "\\frac{r_1}{r_2} = \\sqrt{\\frac{M_2}{M_1}} = \\sqrt{\\frac{d_2}{d_1}}"
-                },
-                {
-                    title: "Dalton's Law of Partial Pressures",
-                    content: "The total pressure exerted by a mixture of non-reacting gases is equal to the <strong>sum of the partial pressures</strong> of the individual gases.",
-                    formula: "P_{total} = P_A + P_B + P_C + ..."
-                }
+                { title: "Properties of Gases", content: `<ul><li>Gases have neither a definite shape nor volume.</li><li>They are highly compressible due to large intermolecular spaces.</li><li>They exhibit high rates of diffusion (intermixing) and effusion (escaping through a small hole).</li><li>Key measurable properties are <strong>Mass (m)</strong>, <strong>Volume (V)</strong>, <strong>Pressure (P)</strong>, and <strong>Temperature (T)</strong>.</li></ul>` },
+                { title: "Boyle's Law", content: "At constant temperature, the volume of a given mass of gas is <strong>inversely proportional</strong> to its pressure. The P-V graph is a hyperbola called an isotherm.", formula: "P_1V_1 = P_2V_2" },
+                { title: "Charles' Law", content: "At constant pressure, the volume of a given mass of gas is <strong>directly proportional</strong> to its absolute temperature (in Kelvin).", formula: "\\frac{V_1}{T_1} = \\frac{V_2}{T_2}" },
+                { title: "Gay-Lussac's Law", content: "At constant volume, the pressure of a given mass of gas is <strong>directly proportional</strong> to its absolute temperature. The P-T graph is an isochore.", formula: "\\frac{P_1}{T_1} = \\frac{P_2}{T_2}" },
+                { title: "Avogadro's Law", content: "At constant temperature and pressure, equal volumes of all gases contain an <strong>equal number of moles</strong> (or molecules).", formula: "\\frac{V_1}{n_1} = \\frac{V_2}{n_2}" },
+                { title: "Ideal Gas Equation", content: "This equation combines the gas laws to relate all four variables for a hypothetical 'ideal gas'. 'R' is the universal gas constant.", formula: "PV = nRT" },
+                { title: "Graham's Law of Diffusion", content: "The rate of diffusion (r) of a gas is <strong>inversely proportional</strong> to the square root of its molar mass (M) or density (d).", formula: "\\frac{r_1}{r_2} = \\sqrt{\\frac{M_2}{M_1}} = \\sqrt{\\frac{d_2}{d_1}}" },
+                { title: "Dalton's Law of Partial Pressures", content: "The total pressure of a mixture of non-reacting gases is the <strong>sum of the partial pressures</strong> of the individual gases.", formula: "P_{total} = P_A + P_B + P_C + ..." }
             ],
             formulas: [
-                { name: "Boyle's Law", eq: "P_1V_1 = P_2V_2" },
-                { name: "Charles' Law", eq: "\\frac{V_1}{T_1} = \\frac{V_2}{T_2}" },
-                { name: "Gay-Lussac's Law", eq: "\\frac{P_1}{T_1} = \\frac{P_2}{T_2}" },
+                { name: "Boyle's Law", eq: "P_1V_1 = P_2V_2" }, { name: "Charles' Law", eq: "\\frac{V_1}{T_1} = \\frac{V_2}{T_2}" },
+                { name: "Ideal Gas Equation", eq: "PV = nRT" }, { name: "Combined Gas Law", eq: "\\frac{P_1V_1}{T_1} = \\frac{P_2V_2}{T_2}" },
+                { name: "Graham's Law", eq: "\\frac{r_1}{r_2} = \\sqrt{\\frac{M_2}{M_1}}" }, { name: "Dalton's Law", eq: "P_{total} = \\sum P_i" },
+                { name: "Kinetic Energy of Gas", eq: "E_k = \\frac{3}{2} nRT" }, { name: "RMS Velocity", eq: "u_{rms} = \\sqrt{\\frac{3RT}{M}}" },
+                { name: "Van der Waals Equation", eq: "\\left(P + \\frac{an^2}{V^2}\\right)(V - nb) = nRT" }
+            ],
+            advancedTopics: [
+                { title: "Kinetic Molecular Theory of Gases", content: `<p>This theory explains ideal gas behavior based on these postulates:</p><ul><li>Gas particles are in constant, random, straight-line motion.</li><li>Particle volume is negligible compared to container volume.</li><li>No attractive or repulsive forces exist between particles.</li><li>Collisions are perfectly elastic (no energy loss).</li><li>Average kinetic energy is proportional to absolute temperature.</li></ul>`},
+                { title: "Molecular Velocities", content: `<p>Gas molecules have a distribution of speeds:</p><ul><li><strong>Most Probable Velocity ($$u_{mp}$$):</strong> Speed of the most molecules.</li><li><strong>Average Velocity ($$u_{avg}$$):</strong> The arithmetic mean of all speeds.</li><li><strong>Root Mean Square (RMS) Velocity ($$u_{rms}$$):</strong> Used to calculate kinetic energy.</li></ul><p>The relationship is: $$u_{rms} > u_{avg} > u_{mp}$$</p>` },
+                { title: "Real Gases & Deviation from Ideal Behavior", content: `<p>Real gases deviate from ideal behavior because real gas molecules <strong>do have volume</strong> and <strong>do experience intermolecular forces</strong>. Deviations are most significant at <strong>high pressure</strong> and <strong>low temperature</strong>.</p><h4>The Van der Waals Equation</h4><p>This equation corrects the ideal gas law for real gases:</p><div class="formula-box">$$ \\left(P + \\frac{an^2}{V^2}\\right)(V - nb) = nRT $$</div><ul><li>The '<strong>a</strong>' term corrects for <strong>intermolecular forces</strong>.</li><li>The '<strong>b</strong>' term corrects for the <strong>volume of molecules</strong>.</li></ul>` }
+            ]
+        };
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelector(`.nav-btn[onclick="showSection('${sectionId}')"]`).classList.add('active');
+        }
+
+        function renderContent() {
+            const conceptsArea = document.getElementById('concepts');
+            const formulasArea = document.getElementById('formulas');
+            const advancedArea = document.getElementById('advanced');
+
+            // Concepts & Laws Tab
+            let conceptsHtml = '';
+            extractedTextbookContent.conceptsAndLaws.forEach(item => {
+                conceptsHtml += `<div class="card"><h2>${item.title}</h2>${item.content}`;
+                if (item.formula) conceptsHtml += `<div class="formula-box">$$ ${item.formula} $$</div>`;
+                conceptsHtml += `</div>`;
+            });
+            conceptsArea.innerHTML = conceptsHtml;
+
+            // Formula Sheet Tab
+            let formulasHtml = `<div class="card"><h2>Complete Formula Sheet</h2>`;
+            extractedTextbookContent.formulas.forEach(item => {
+                formulasHtml += `<h3>${item.name}</h3><div class="formula-box">$$ ${item.eq} $$</div>`;
+            });
+            formulasArea.innerHTML = formulasHtml + `</div>`;
+
+            // Advanced Topics Tab
+            let advancedHtml = '';
+            extractedTextbookContent.advancedTopics.forEach(item => {
+                advancedHtml += `<div class="card"><h2>${item.title}</h2>${item.content}</div>`;
+            });
+            advancedArea.innerHTML = advancedHtml;
+
+            renderMathInElement(document.body);
+        }
+
+        // --- AI Model Integration and Logic ---
+        async function getAIResponse() {
+            const question = document.getElementById('user-question').value.toLowerCase();
+            const selectedModel = document.getElementById('model-selector').value;
+            const responseText = document.getElementById('response-text');
+            const loader = document.getElementById('loader');
+
+            if (!question.trim()) {
+                responseText.innerHTML = "Please enter a question.";
+                return;
+            }
+
+            loader.style.display = 'block';
+            responseText.innerHTML = '';
+            
+            // =======================================================================
+            // IMPORTANT: This is a SIMULATION of an AI response.
+            // For real functionality, replace the logic below with an actual API
+            // call using your own API keys.
+            // =======================================================================
+            const API_KEYS = {
+                gemini: "PASTE_YOUR_GEMINI_API_KEY_HERE",
+                gpt: "PASTE_YOUR_OPENAI_API_KEY_HERE",
+                claude: "PASTE_YOUR_ANTHROPIC_API_KEY_HERE"
+            };
+            const sourceContext = JSON.stringify(extractedTextbookContent);
+            const prompt = `Based ONLY on this context: ${sourceContext}. Answer the question: "${question}"`;
+
+            console.log(`Simulating API call to ${selectedModel}...`);
+            setTimeout(() => {
+                let simulatedResponse = "";
+                // Improved simulation logic
+                if (question.includes("diffusion") && question.includes("effusion")) {
+                    simulatedResponse = `(Simulated ${selectedModel} Response) Based on the text, <strong>Diffusion</strong> is the spontaneous intermixing of gases to form a homogeneous mixture, like the smell of perfume spreading across a room. <strong>Effusion</strong> is a specific type of diffusion where a gas escapes through a very small hole, like air leaking from a punctured tire.`;
+                } else if (question.includes("real gas") && question.includes("ideal")) {
+                    simulatedResponse = `(Simulated ${selectedModel} Response) Real gases deviate from ideal behavior for two main reasons: 1) Real gas molecules have their own volume, which is not negligible at high pressures. 2) Real gas molecules experience intermolecular attractive forces, which are significant at low temperatures. The Van der Waals equation corrects for these factors.`;
+                } else if (question.includes("boyle") || question.includes("charles")) {
+                     simulatedResponse = `(Simulated ${selectedModel} Response) <strong>Boyle's Law</strong> ($$P_1V_1 = P_2V_2$$) states that pressure and volume are inversely related at constant temperature. <strong>Charles' Law</strong> ($$\\frac{V_1}{T_1} = \\frac{V_2}{T_2}$$) states that volume and absolute temperature are directly related at constant pressure.`;
+                } else {
+                    simulatedResponse = `(Simulated ${selectedModel} Response) This is a general response. The provided text covers topics like Gas Laws (Boyle's, Charles'), the Ideal Gas Equation, Graham's Law of Diffusion, Kinetic Molecular Theory, and the behavior of Real Gases. Please ask a more specific question for a detailed answer.`;
+                }
+                
+                loader.style.display = 'none';
+                responseText.innerHTML = simulatedResponse;
+                renderMathInElement(responseText);
+            }, 1500);
+        }
+
+        // --- Initializer ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent();
+        });
+    </script>
+
+</body>
+</html>{T_1} = \\frac{P_2}{T_2}" },
                 { name: "Avogadro's Law", eq: "\\frac{V_1}{n_1} = \\frac{V_2}{n_2}" },
                 { name: "Ideal Gas Equation", eq: "PV = nRT" },
                 { name: "Combined Gas Law", eq: "\\frac{P_1V_1}{T_1} = \\frac{P_2V_2}{T_2}" },
