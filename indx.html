@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutor: Behaviour of Gases</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        /* Modern CSS for styling */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .chapter {
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1.5rem;
+        }
+        .formula-box {
+            background-color: #e9ecef;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        /* AI Doubt Solver Section */
+        #ai-doubt-solver {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            background-color: #e3f2fd;
+            border: 1px solid #bbdefb;
+        }
+        textarea, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            font-size: 1rem;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #ai-response-area {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 5px;
+            min-height: 50px;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap; /* Preserve formatting of the response */
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+            margin: 10px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>AI Tutor: Behaviour of Gases</h1>
+            <p style="text-align:center; color: var(--secondary-color);">Based on VIII Class Chemistry Textbook</p>
+        </header>
+
+        <main id="textbook-content">
+            </main>
+
+        <section id="ai-doubt-solver">
+            <h3>Ask a Doubt</h3>
+            <p>Have a question about the content? Select an AI model and ask below.</p>
+            
+            <textarea id="user-question" rows="4" placeholder="e.g., Explain Boyle's Law in simple terms."></textarea>
+            
+            <select id="model-selector">
+                <option value="gemini">Gemini (Google)</option>
+                <option value="gpt">GPT (OpenAI)</option>
+                <option value="claude">Claude (Anthropic)</option>
+            </select>
+            
+            <button onclick="getAIResponse()">Submit Question</button>
+
+            <h4>AI Response:</h4>
+            <div id="ai-response-area">
+                <div class="loader" id="loader"></div>
+                <p id="response-text">Your answer will appear here...</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // ===================================================================================
+        // JAVASCRIPT LOGIC AND DATA
+        // ===================================================================================
+
+        // --- Optional: JSON Schema for Extracted Content Structure ---
+        /*
+        {
+            "schema": "TextbookContent/v1",
+            "title": "String",
+            "chapters": [
+                {
+                    "title": "String",
+                    "introduction": "String (HTML allowed)",
+                    "sections": [
+                        {
+                            "title": "String",
+                            "content": "String (HTML allowed)",
+                            "formulas": ["String (LaTeX format)"]
+                        }
+                    ]
+                }
+            ]
+        }
+        */
+        
+        // --- Placeholder for OCR/Text Data ---
+        // This JavaScript object holds the structured content extracted from the textbook PDF.
+        const extractedTextbookContent = {
+            title: "Behaviour of Gases",
+            chapters: [
+                {
+                    title: "Introduction & Properties",
+                    introduction: "Matter exists in three states: solids, liquids, and gases. The term 'Gas' was derived from 'Chaos', which means disorder. Gases have unique characteristic properties.",
+                    sections: [
+                        {
+                            title: "Characteristic Properties of Gases",
+                            content: `
+                                <ul>
+                                    <li>Gases have neither definite shape nor definite volume.</li>
+                                    <li>They are highly compressible due to large intermolecular spaces.</li>
+                                    <li>They are highly expansible and move randomly (Brownian movement).</li>
+                                    <li>They have low density and can diffuse freely.</li>
+                                </ul>
+                            `,
+                            formulas: []
+                        },
+                        {
+                            title: "Measurable Properties of Gases",
+                            content: "Mass (m), Volume (V), Pressure (P), and Temperature (T) are the key measurable properties.",
+                            formulas: [
+                                "n = \\frac{m}{M} \\quad (n=\\text{moles}, m=\\text{mass}, M=\\text{molar mass})",
+                                "P = hdg \\quad (P=\\text{pressure}, h=\\text{height}, d=\\text{density}, g=\\text{gravity})"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    title: "Gas Laws",
+                    introduction: "Gas laws describe the relationship between pressure (P), volume (V), mass (m), and temperature (T).",
+                    sections: [
+                        {
+                            title: "Boyle's Law",
+                            content: "At a constant temperature, the volume of a given mass of a gas is inversely proportional to its pressure. The graphs plotted are called Isotherms.",
+                            formulas: [
+                                "V \\propto \\frac{1}{P}",
+                                "PV = K \\quad (\\text{constant})",
+                                "P_1V_1 = P_2V_2"
+                            ]
+                        },
+                        {
+                            title: "Charles' Law",
+                            content: "At constant pressure, the volume of a given mass of a gas is directly proportional to its absolute temperature (in Kelvin).",
+                            formulas: [
+                                "V \\propto T",
+                                "\\frac{V}{T} = K \\quad (\\text{constant})",
+                                "\\frac{V_1}{T_1} = \\frac{V_2}{T_2}"
+                            ]
+                        },
+                        {
+                            title: "Gay-Lussac's Law",
+                            content: "At constant volume, the pressure of a given mass of a gas is directly proportional to its absolute temperature. The graphs are called Isochores.",
+                            formulas: [
+                                "P \\propto T",
+                                "\\frac{P}{T} = K \\quad (\\text{constant})",
+                                "\\frac{P_1}{T_1} = \\frac{P_2}{T_2}"
+                            ]
+                        },
+                        {
+                            title: "Avogadro's Law",
+                            content: "Under equal conditions of temperature and pressure, equal volumes of all gases contain an equal number of moles (or molecules).",
+                            formulas: [
+                                "V \\propto n \\quad (n = \\text{number of moles})",
+                                "\\frac{V_1}{n_1} = \\frac{V_2}{n_2}"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    title: "The Ideal Gas Equation",
+                    introduction: "An ideal gas is a hypothetical gas that obeys all gas laws under all conditions. The Ideal Gas Equation combines Boyle's, Charles', and Avogadro's laws.",
+                    sections: [
+                        {
+                            title: "Equation and Constants",
+                            content: "The equation relates all four measurable properties of a gas. 'R' is the universal gas constant.",
+                            formulas: [
+                                "PV = nRT",
+                                "\\frac{P_1V_1}{T_1} = \\frac{P_2V_2}{T_2} \\quad (\\text{Combined Gas Law})",
+                                "d = \\frac{PM}{RT} \\quad (\\text{Density relationship})"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- Function to render the extracted content onto the page ---
+        function renderContent() {
+            const contentArea = document.getElementById('textbook-content');
+            let html = '';
+            extractedTextbookContent.chapters.forEach(chapter => {
+                html += `<div class="chapter">`;
+                html += `<h2>${chapter.title}</h2>`;
+                html += `<p>${chapter.introduction}</p>`;
+                chapter.sections.forEach(section => {
+                    html += `<h3>${section.title}</h3>`;
+                    html += section.content;
+                    if (section.formulas.length > 0) {
+                        section.formulas.forEach(formula => {
+                            // Enclose LaTeX in delimiters for KaTeX
+                            html += `<div class="formula-box">$$${formula}$$</div>`;
+                        });
+                    }
+                });
+                html += `</div>`;
+            });
+            contentArea.innerHTML = html;
+            // Re-render math equations after dynamic content insertion
+            renderMathInElement(document.body);
+        }
+
+        // --- AI Model Integration Hooks and Logic ---
+        async function getAIResponse() {
+            const question = document.getElementById('user-question').value;
+            const selectedModel = document.getElementById('model-selector').value;
+            const responseArea = document.getElementById('response-text');
+            const loader = document.getElementById('loader');
+
+            if (!question.trim()) {
+                responseArea.textContent = "Please enter a question.";
+                return;
+            }
+
+            // Show loader and clear previous response
+            loader.style.display = 'block';
+            responseArea.textContent = '';
+
+            // --- Placeholder for Model API Keys ---
+            // IMPORTANT: Replace these with your actual API keys.
+            // In a real application, these should be stored securely on a backend server.
+            const API_KEYS = {
+                gemini: "YOUR_GEMINI_API_KEY_HERE",
+                gpt: "YOUR_OPENAI_API_KEY_HERE",
+                claude: "YOUR_ANTHROPIC_API_KEY_HERE"
+            };
+
+            // Create a concise context from the textbook data to send to the AI
+            // This makes the AI "source-aware"
+            const sourceContext = JSON.stringify(extractedTextbookContent);
+            const prompt = `
+                Based ONLY on the following textbook context about the 'Behaviour of Gases', please answer the user's question.
+                If the answer cannot be found in the context, state that clearly.
+
+                --- TEXTBOOK CONTEXT ---
+                ${sourceContext}
+                --- END OF CONTEXT ---
+
+                USER QUESTION: "${question}"
+            `;
+
+            // --- SIMULATED API CALL LOGIC ---
+            // This section demonstrates how you would structure the API call.
+            // The `setTimeout` simulates network latency.
+            console.log(`Simulating API call to ${selectedModel}...`);
+            console.log("Sending Prompt:", prompt);
+
+            setTimeout(() => {
+                let simulatedResponse = "";
+                switch (selectedModel) {
+                    case "gemini":
+                        simulatedResponse = `(Simulated Gemini Response) Boyle's Law states that for a fixed amount of gas at constant temperature, the volume is inversely proportional to the pressure. This means if you increase the pressure, the volume decreases. The formula is $P_1V_1 = P_2V_2$.`;
+                        break;
+                    case "gpt":
+                        simulatedResponse = `(Simulated GPT Response) According to the provided text, Boyle's Law establishes an inverse relationship between pressure and volume when the temperature is kept constant. The mathematical expression for this law is $P_1V_1 = P_2V_2$.`;
+                        break;
+                    case "claude":
+                        simulatedResponse = `(Simulated Claude Response) Based on the context, Boyle's Law describes how a gas's volume changes with pressure if the temperature doesn't change. They are inversely proportional, meaning as one goes up, the other goes down. This is represented by the equation $PV = K$.`;
+                        break;
+                }
+                
+                // Hide loader and display response
+                loader.style.display = 'none';
+                responseArea.textContent = simulatedResponse;
+
+                // Re-render math in the AI response area
+                renderMathInElement(document.getElementById('ai-response-area'));
+
+            }, 1500); // Simulate 1.5 second delay
+
+            /*
+            // --- REAL API CALL PSEUDOCODE (Example for a generic fetch API) ---
+            
+            try {
+                const response = await fetch('YOUR_AI_MODEL_API_ENDPOINT', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEYS[selectedModel]}`
+                    },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        max_tokens: 250
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response.status}`);
+                }
+
+                const data = await response.json();
+                const answer = data.choices[0].text; // Adjust based on actual API response structure
+                
+                loader.style.display = 'none';
+                responseArea.textContent = answer;
+                renderMathInElement(document.getElementById('ai-response-area'));
+
+            } catch (error) {
+                loader.style.display = 'none';
+                responseArea.textContent = `Error: Could not fetch response. ${error.message}`;
+                console.error("API Call Error:", error);
+            }
+            */
+        }
+
+        // --- Initializer ---
+        // This function runs when the page loads to populate the content.
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent();
+        });
+    </script>
+</body>
+</html>
